@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>CRM 2004</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      display: flex;
+      gap: 40px;
+    }
+    .box {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 250px;
+    }
+    .box h2 {
+      margin-top: 0;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin: 6px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #28a745;
+      border: none;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    #app {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+    }
+    ul {
+      padding-left: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="auth" class="container">
+    
+    <div class="box">
+      <h2>Login</h2>
+      <input id="username" placeholder="Usuário" />
+      <input id="password" type="password" placeholder="Senha" />
+      <button onclick="login()">Entrar</button>
+    </div>
+
+    
+    <div class="box">
+      <h2>Cadastro</h2>
+      <input id="newUsername" placeholder="Novo usuário" />
+      <input id="newPassword" type="password" placeholder="Nova senha" />
+      <button onclick="register()">Cadastrar</button>
+    </div>
+  </div>
+
+  
+  <div id="app" class="container">
+    <div class="box" style="width: 500px;">
+      <h2>Clientes</h2>
+      <input id="nome" placeholder="Nome" />
+      <input id="email" placeholder="Email" />
+      <input id="telefone" placeholder="Telefone" />
+      <button onclick="addClient()">Adicionar</button>
+      <ul id="lista-clientes"></ul>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
