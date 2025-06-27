@@ -218,19 +218,43 @@
   }
 
   function atualizarLista() {
-    const container = document.getElementById("lista-clientes");
-    container.innerHTML = "";
-    clientes.forEach(cliente => {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `
-        <p><strong>Nome:</strong> ${cliente.nome}</p>
-        <p><strong>Email:</strong> ${cliente.email}</p>
-        <p><strong>Telefone:</strong> ${cliente.telefone}</p>
-      `;
-      container.appendChild(card);
-    });
+  const ul = document.getElementById("lista-clientes");
+  ul.innerHTML = "";
+  clientes.forEach((cliente, index) => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <strong>${cliente.nome}</strong><br/>
+      Email: ${cliente.email}<br/>
+      Telefone: ${cliente.telefone}<br/>
+      <button onclick="editarCliente(${index})">Editar</button>
+      <button onclick="excluirCliente(${index})">Excluir</button>
+    `;
+    ul.appendChild(li);
+  });
   }
+  function excluirCliente(index) {
+  if (confirm("Deseja realmente excluir este cliente?")) {
+    clientes.splice(index, 1);
+    salvarClientes();
+    atualizarLista();
+  }
+}
+
+function editarCliente(index) {
+  const cliente = clientes[index];
+  const novoNome = prompt("Novo nome:", cliente.nome);
+  const novoEmail = prompt("Novo email:", cliente.email);
+  const novoTelefone = prompt("Novo telefone:", cliente.telefone);
+  if (novoNome && novoEmail && novoTelefone) {
+    clientes[index] = {
+      nome: novoNome,
+      email: novoEmail,
+      telefone: novoTelefone
+    };
+    salvarClientes();
+    atualizarLista();
+  }
+}
 </script>
 </body>
 </html>
