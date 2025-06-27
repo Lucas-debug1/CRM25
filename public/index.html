@@ -87,8 +87,31 @@
       animation: fadeIn 0.8s ease;
     }
 
-    ul {
-      padding-left: 20px;
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .card {
+      background: #f8f9fa;
+      padding: 14px 18px;
+      border-left: 5px solid #28a745;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+    }
+
+    .card p {
+      margin: 6px 0;
+      font-size: 14px;
+      color: #333;
     }
 
     @keyframes fadeIn {
@@ -129,7 +152,7 @@
   <input id="email" placeholder="Email" />
   <input id="telefone" placeholder="Telefone" />
   <button onclick="addClient()">Adicionar</button>
-  <ul id="lista-clientes"></ul>
+  <div id="lista-clientes" class="cards"></div>
 </div>
 
 <script>
@@ -195,12 +218,17 @@
   }
 
   function atualizarLista() {
-    const ul = document.getElementById("lista-clientes");
-    ul.innerHTML = "";
+    const container = document.getElementById("lista-clientes");
+    container.innerHTML = "";
     clientes.forEach(cliente => {
-      const li = document.createElement("li");
-      li.textContent = `${cliente.nome} | ${cliente.email} | ${cliente.telefone}`;
-      ul.appendChild(li);
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <p><strong>Nome:</strong> ${cliente.nome}</p>
+        <p><strong>Email:</strong> ${cliente.email}</p>
+        <p><strong>Telefone:</strong> ${cliente.telefone}</p>
+      `;
+      container.appendChild(card);
     });
   }
 </script>
