@@ -1,20 +1,18 @@
-
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const app = express();
+const db = require('./config/db');
 const authRoutes = require('./routes/auth');
 const clientRoutes = require('./routes/clients');
-const db = require('./models');
 
+const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public'));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/clients', clientRoutes);
 
+db.sync().then(() => console.log("DB synced")).catch(err => console.error(err));
+
 const PORT = process.env.PORT || 3000;
-db.sequelize.sync().then(() => {
-  app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
-});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
