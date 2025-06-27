@@ -78,57 +78,59 @@
     }
 
     #app {
-      .app-container {
-  display: flex;
-  gap: 20px;
-  margin-top: 20px;
-  justify-content: center;
-  flex-wrap: wrap;
-  padding: 20px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-}
+      display: none; /* Oculta até o login */
+    }
 
-.form-box, .list-box {
-  width: 300px;
-}
+    .app-container {
+      display: flex;
+      gap: 20px;
+      margin-top: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    }
 
-ul#lista-clientes {
-  list-style: none;
-  padding: 0;
-}
+    .form-box, .list-box {
+      width: 300px;
+    }
 
-ul#lista-clientes li {
-  background: #f0f0f0;
-  margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
+    ul#lista-clientes {
+      list-style: none;
+      padding: 0;
+    }
 
-ul#lista-clientes li button {
-  margin-right: 8px;
-  background-color: #007bff;
-  border: none;
-  color: white;
-  padding: 6px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.8em;
-}
+    ul#lista-clientes li {
+      background: #f0f0f0;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
 
-ul#lista-clientes li button:hover {
-  background-color: #0056b3;
-}
+    ul#lista-clientes li button {
+      margin-right: 8px;
+      background-color: #007bff;
+      border: none;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8em;
+    }
 
-ul#lista-clientes li button:last-child {
-  background-color: #dc3545;
-}
+    ul#lista-clientes li button:hover {
+      background-color: #0056b3;
+    }
 
-ul#lista-clientes li button:last-child:hover {
-  background-color: #a71d2a;
-}
+    ul#lista-clientes li button:last-child {
+      background-color: #dc3545;
+    }
+
+    ul#lista-clientes li button:last-child:hover {
+      background-color: #a71d2a;
     }
 
     .cards {
@@ -190,20 +192,23 @@ ul#lista-clientes li button:last-child:hover {
   </div>
 </div>
 
-<div id="app" class="app-container">
-  <div class="form-box">
-    <h2>Adicionar Cliente</h2>
-    <input id="nome" placeholder="Nome" />
-    <input id="email" placeholder="Email" />
-    <input id="telefone" placeholder="Telefone" />
-    <button onclick="addClient()">Adicionar</button>
-  </div>
+<div id="app">
+  <div class="app-container">
+    <div class="form-box">
+      <h2>Adicionar Cliente</h2>
+      <input id="nome" placeholder="Nome" />
+      <input id="email" placeholder="Email" />
+      <input id="telefone" placeholder="Telefone" />
+      <button onclick="addClient()">Adicionar</button>
+    </div>
 
-  <div class="list-box">
-    <h2>Clientes Cadastrados</h2>
-    <ul id="lista-clientes"></ul>
+    <div class="list-box">
+      <h2>Clientes Cadastrados</h2>
+      <ul id="lista-clientes"></ul>
+    </div>
   </div>
 </div>
+
 <script>
   let clientes = [];
 
@@ -267,43 +272,45 @@ ul#lista-clientes li button:last-child:hover {
   }
 
   function atualizarLista() {
-  const ul = document.getElementById("lista-clientes");
-  ul.innerHTML = "";
-  clientes.forEach((cliente, index) => {
-    const li = document.createElement("li");
-    li.innerHTML = `
-      <strong>${cliente.nome}</strong><br/>
-      Email: ${cliente.email}<br/>
-      Telefone: ${cliente.telefone}<br/>
-      <button onclick="editarCliente(${index})">Editar</button>
-      <button onclick="excluirCliente(${index})">Excluir</button>
-    `;
-    ul.appendChild(li);
-  });
+    const ul = document.getElementById("lista-clientes");
+    ul.innerHTML = "";
+    clientes.forEach((cliente, index) => {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <strong>${cliente.nome}</strong><br/>
+        Email: ${cliente.email}<br/>
+        Telefone: ${cliente.telefone}<br/>
+        <button onclick="editarCliente(${index})">Editar</button>
+        <button onclick="excluirCliente(${index})">Excluir</button>
+      `;
+      ul.appendChild(li);
+    });
   }
-  function excluirCliente(index) {
-  if (confirm("Deseja realmente excluir este cliente?")) {
-    clientes.splice(index, 1);
-    salvarClientes();
-    atualizarLista();
-  }
-}
 
-function editarCliente(index) {
-  const cliente = clientes[index];
-  const novoNome = prompt("Novo nome:", cliente.nome);
-  const novoEmail = prompt("Novo email:", cliente.email);
-  const novoTelefone = prompt("Novo telefone:", cliente.telefone);
-  if (novoNome && novoEmail && novoTelefone) {
-    clientes[index] = {
-      nome: novoNome,
-      email: novoEmail,
-      telefone: novoTelefone
-    };
-    salvarClientes();
-    atualizarLista();
+  function excluirCliente(index) {
+    if (confirm("Deseja realmente excluir este cliente?")) {
+      clientes.splice(index, 1);
+      salvarClientes();
+      atualizarLista();
+    }
   }
-}
+
+  function editarCliente(index) {
+    const cliente = clientes[index];
+    const novoNome = prompt("Novo nome:", cliente.nome);
+    const novoEmail = prompt("Novo email:", cliente.email);
+    const novoTelefone = prompt("Novo telefone:", cliente.telefone);
+    if (novoNome && novoEmail && novoTelefone) {
+      clientes[index] = {
+        nome: novoNome,
+        email: novoEmail,
+        telefone: novoTelefone
+      };
+      salvarClientes();
+      atualizarLista();
+    }
+  }
 </script>
+
 </body>
 </html>
