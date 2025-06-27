@@ -78,13 +78,57 @@
     }
 
     #app {
-      display: none;
-      padding: 20px;
-      width: 350px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-      animation: fadeIn 0.8s ease;
+      .app-container {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+}
+
+.form-box, .list-box {
+  width: 300px;
+}
+
+ul#lista-clientes {
+  list-style: none;
+  padding: 0;
+}
+
+ul#lista-clientes li {
+  background: #f0f0f0;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+ul#lista-clientes li button {
+  margin-right: 8px;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8em;
+}
+
+ul#lista-clientes li button:hover {
+  background-color: #0056b3;
+}
+
+ul#lista-clientes li button:last-child {
+  background-color: #dc3545;
+}
+
+ul#lista-clientes li button:last-child:hover {
+  background-color: #a71d2a;
+}
     }
 
     .cards {
@@ -146,15 +190,20 @@
   </div>
 </div>
 
-<div id="app">
-  <h2>Clientes</h2>
-  <input id="nome" placeholder="Nome" />
-  <input id="email" placeholder="Email" />
-  <input id="telefone" placeholder="Telefone" />
-  <button onclick="addClient()">Adicionar</button>
-  <div id="lista-clientes" class="cards"></div>
-</div>
+<div id="app" class="app-container">
+  <div class="form-box">
+    <h2>Adicionar Cliente</h2>
+    <input id="nome" placeholder="Nome" />
+    <input id="email" placeholder="Email" />
+    <input id="telefone" placeholder="Telefone" />
+    <button onclick="addClient()">Adicionar</button>
+  </div>
 
+  <div class="list-box">
+    <h2>Clientes Cadastrados</h2>
+    <ul id="lista-clientes"></ul>
+  </div>
+</div>
 <script>
   let clientes = [];
 
