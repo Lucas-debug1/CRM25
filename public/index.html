@@ -133,6 +133,8 @@
 </div>
 
 <script>
+  let clientes = [];
+
   function switchTab(tabId) {
     document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
     document.querySelectorAll('.form').forEach(form => form.classList.remove('active'));
@@ -146,6 +148,7 @@
     if (user && pass) {
       document.getElementById("auth").style.display = "none";
       document.getElementById("app").style.display = "block";
+      carregarClientes();
     } else {
       alert("Preencha todos os campos!");
     }
@@ -166,17 +169,39 @@
     const nome = document.getElementById("nome").value;
     const email = document.getElementById("email").value;
     const telefone = document.getElementById("telefone").value;
-    const ul = document.getElementById("lista-clientes");
     if (nome && email && telefone) {
-      const li = document.createElement("li");
-      li.textContent = `${nome} | ${email} | ${telefone}`;
-      ul.appendChild(li);
+      const cliente = { nome, email, telefone };
+      clientes.push(cliente);
+      salvarClientes();
+      atualizarLista();
       document.getElementById("nome").value = "";
       document.getElementById("email").value = "";
       document.getElementById("telefone").value = "";
     } else {
       alert("Preencha todos os campos!");
     }
+  }
+
+  function salvarClientes() {
+    localStorage.setItem("clientes", JSON.stringify(clientes));
+  }
+
+  function carregarClientes() {
+    const dados = localStorage.getItem("clientes");
+    if (dados) {
+      clientes = JSON.parse(dados);
+      atualizarLista();
+    }
+  }
+
+  function atualizarLista() {
+    const ul = document.getElementById("lista-clientes");
+    ul.innerHTML = "";
+    clientes.forEach(cliente => {
+      const li = document.createElement("li");
+      li.textContent = `${cliente.nome} | ${cliente.email} | ${cliente.telefone}`;
+      ul.appendChild(li);
+    });
   }
 </script>
 </body>
