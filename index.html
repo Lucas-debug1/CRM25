@@ -8,318 +8,182 @@
     body {
       font-family: Arial, sans-serif;
       background: linear-gradient(135deg, #1d3557, #457b9d);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
       margin: 0;
+      padding: 20px;
+      color: #333;
     }
 
-    .container {
+    .container, .admin-panel {
+      max-width: 500px;
       background: white;
+      margin: 0 auto 40px;
+      padding: 20px;
       border-radius: 10px;
       box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-      overflow: hidden;
-      width: 350px;
-      animation: fadeIn 0.8s ease;
     }
 
-    .tabs {
-      display: flex;
-    }
-
-    .tab {
-      flex: 1;
-      padding: 14px;
+    h2 {
       text-align: center;
-      cursor: pointer;
-      font-weight: bold;
-      background: #f0f0f0;
-      transition: 0.3s;
+      margin-bottom: 20px;
     }
 
-    .tab.active {
-      background: #2196f3;
-      color: white;
-    }
-
-    .form {
-      padding: 20px;
-      display: none;
-      animation: fadeSlide 0.4s ease;
-    }
-
-    .form.active {
+    input, button, label {
       display: block;
+      width: 100%;
+      margin-bottom: 15px;
     }
 
-    input, select {
-      width: 100%;
+    input[type="file"] {
+      padding: 4px;
+    }
+
+    input, button {
       padding: 10px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
       border-radius: 5px;
+      border: 1px solid #ccc;
     }
 
     button {
-      width: 100%;
-      padding: 10px;
       background: #28a745;
       color: white;
       border: none;
-      border-radius: 5px;
       font-weight: bold;
       cursor: pointer;
-      transition: 0.3s;
     }
 
     button:hover {
       background: #218838;
     }
 
-    #app {
+    .hidden {
       display: none;
     }
 
-    .app-container {
-      display: flex;
-      gap: 20px;
-      margin-top: 20px;
-      justify-content: center;
-      flex-wrap: wrap;
-      padding: 20px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-    }
-
-    .form-box, .list-box {
-      width: 300px;
-    }
-
-    ul#lista-clientes {
+    ul {
       list-style: none;
       padding: 0;
     }
 
-    ul#lista-clientes li {
+    li {
       background: #f0f0f0;
-      margin-bottom: 10px;
       padding: 10px;
+      margin-bottom: 10px;
       border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
-    ul#lista-clientes li button {
-      margin-right: 8px;
-      background-color: #007bff;
-      border: none;
-      color: white;
-      padding: 6px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.8em;
+    .admin-login {
+      margin-bottom: 30px;
     }
 
-    ul#lista-clientes li button:hover {
-      background-color: #0056b3;
-    }
-
-    ul#lista-clientes li button:last-child {
-      background-color: #dc3545;
-    }
-
-    ul#lista-clientes li button:last-child:hover {
-      background-color: #a71d2a;
-    }
-
-    .cards {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 16px;
-    }
-
-    .card {
-      background: #f8f9fa;
-      padding: 14px 18px;
-      border-left: 5px solid #28a745;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 16px rgba(0,0,0,0.08);
-    }
-
-    .card p {
-      margin: 6px 0;
-      font-size: 14px;
-      color: #333;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    @keyframes fadeSlide {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    a.download-link {
+      color: #007bff;
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
 
-<div class="container" id="auth">
-  <div class="tabs">
-    <div class="tab active" onclick="switchTab('login')">Login</div>
-    <div class="tab" onclick="switchTab('register')">Cadastro</div>
-  </div>
-
-  <div id="login" class="form active">
-    <input id="username" placeholder="Usuário" />
-    <input id="password" type="password" placeholder="Senha" />
-    <button onclick="login()">Entrar</button>
-  </div>
-
-  <div id="register" class="form">
-    <input id="newUsername" placeholder="Novo usuário" />
-    <input id="newPassword" type="password" placeholder="Nova senha" />
-    <button onclick="register()">Cadastrar</button>
-  </div>
+<!-- FORMULÁRIO DO CLIENTE (sem login) -->
+<div class="container">
+  <h2>Formulário do Cliente</h2>
+  <input id="nome" placeholder="Nome" />
+  <input id="email" placeholder="Email" />
+  <input id="telefone" placeholder="Telefone" />
+  <input id="valorConta" placeholder="Valor da Conta (R$)" />
+  <input type="file" id="arquivo" accept=".png, .jpeg, .jpg, .pdf" />
+  <button onclick="enviarFormulario()">Enviar</button>
 </div>
 
-<div id="app">
-  <div class="app-container">
-    <div class="form-box">
-      <h2>Adicionar Cliente</h2>
-      <input id="nome" placeholder="Nome" />
-      <input id="email" placeholder="Email" />
-      <input id="telefone" placeholder="Telefone" />
-      <input id="valor" placeholder="Valor da Conta" />
-      <input id="anexo" type="file" accept=".png,.jpeg,.jpg,.pdf" />
-      <button onclick="addClient()">Adicionar</button>
-    </div>
+<!-- LOGIN PARA ADMINISTRADOR -->
+<div class="admin-login container">
+  <h2>Login do Administrador</h2>
+  <input id="adminUser" placeholder="Usuário" />
+  <input id="adminPass" type="password" placeholder="Senha" />
+  <button onclick="loginAdmin()">Entrar</button>
+</div>
 
-    <div class="list-box">
-      <h2>Clientes Cadastrados</h2>
-      <ul id="lista-clientes"></ul>
-    </div>
-  </div>
+<!-- ÁREA PRIVADA PARA VER CLIENTES -->
+<div class="admin-panel hidden" id="adminPanel">
+  <h2>Clientes Cadastrados</h2>
+  <ul id="listaClientes"></ul>
 </div>
 
 <script>
   let clientes = [];
 
-  function switchTab(tabId) {
-    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-    document.querySelectorAll('.form').forEach(form => form.classList.remove('active'));
-    document.getElementById(tabId).classList.add('active');
-    document.querySelector(`.tab[onclick="switchTab('${tabId}')"]`).classList.add('active');
-  }
-
-  function login() {
-    const user = document.getElementById("username").value;
-    const pass = document.getElementById("password").value;
-    if (user && pass) {
-      document.getElementById("auth").style.display = "none";
-      document.getElementById("app").style.display = "block";
-      carregarClientes();
-    } else {
-      alert("Preencha todos os campos!");
-    }
-  }
-
-  function register() {
-    const newUser = document.getElementById("newUsername").value;
-    const newPass = document.getElementById("newPassword").value;
-    if (newUser && newPass) {
-      alert("Usuário cadastrado! Agora faça login.");
-      switchTab('login');
-    } else {
-      alert("Preencha todos os campos!");
-    }
-  }
-
-  function addClient() {
+  function enviarFormulario() {
     const nome = document.getElementById("nome").value;
     const email = document.getElementById("email").value;
     const telefone = document.getElementById("telefone").value;
-    const valor = document.getElementById("valor").value;
-    const anexo = document.getElementById("anexo").files[0];
+    const valorConta = document.getElementById("valorConta").value;
+    const arquivoInput = document.getElementById("arquivo");
+    const arquivo = arquivoInput.files[0];
 
-    if (nome && email && telefone && valor) {
-      const cliente = { nome, email, telefone, valor, anexo: anexo ? anexo.name : "" };
+    if (!nome || !email || !telefone || !valorConta || !arquivo) {
+      alert("Preencha todos os campos!");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const cliente = {
+        nome,
+        email,
+        telefone,
+        valorConta,
+        arquivo: {
+          nome: arquivo.name,
+          tipo: arquivo.type,
+          conteudo: e.target.result
+        }
+      };
+
       clientes.push(cliente);
-      salvarClientes();
-      atualizarLista();
+      localStorage.setItem("clientes", JSON.stringify(clientes));
+      alert("Informações enviadas com sucesso!");
+
+      // Limpa o formulário
       document.getElementById("nome").value = "";
       document.getElementById("email").value = "";
       document.getElementById("telefone").value = "";
-      document.getElementById("valor").value = "";
-      document.getElementById("anexo").value = "";
-    } else {
-      alert("Preencha todos os campos obrigatórios!");
-    }
+      document.getElementById("valorConta").value = "";
+      document.getElementById("arquivo").value = "";
+    };
+
+    reader.readAsDataURL(arquivo);
   }
 
-  function salvarClientes() {
-    localStorage.setItem("clientes", JSON.stringify(clientes));
+  function loginAdmin() {
+    const user = document.getElementById("adminUser").value;
+    const pass = document.getElementById("adminPass").value;
+
+    // Simples autenticação local (pode ser trocado por backend)
+    if (user === "admin" && pass === "1234") {
+      document.getElementById("adminPanel").classList.remove("hidden");
+      carregarClientes();
+    } else {
+      alert("Usuário ou senha incorretos.");
+    }
   }
 
   function carregarClientes() {
     const dados = localStorage.getItem("clientes");
+    const ul = document.getElementById("listaClientes");
+    ul.innerHTML = "";
+
     if (dados) {
       clientes = JSON.parse(dados);
-      atualizarLista();
-    }
-  }
-
-  function atualizarLista() {
-    const ul = document.getElementById("lista-clientes");
-    ul.innerHTML = "";
-    clientes.forEach((cliente, index) => {
-      const li = document.createElement("li");
-      li.innerHTML = `
-        <strong>${cliente.nome}</strong><br/>
-        Email: ${cliente.email}<br/>
-        Telefone: ${cliente.telefone}<br/>
-        Valor da Conta: ${cliente.valor}<br/>
-        Anexo: ${cliente.anexo || 'Nenhum'}<br/>
-        <button onclick="editarCliente(${index})">Editar</button>
-        <button onclick="excluirCliente(${index})">Excluir</button>
-      `;
-      ul.appendChild(li);
-    });
-  }
-
-  function excluirCliente(index) {
-    if (confirm("Deseja realmente excluir este cliente?")) {
-      clientes.splice(index, 1);
-      salvarClientes();
-      atualizarLista();
-    }
-  }
-
-  function editarCliente(index) {
-    const cliente = clientes[index];
-    const novoNome = prompt("Novo nome:", cliente.nome);
-    const novoEmail = prompt("Novo email:", cliente.email);
-    const novoTelefone = prompt("Novo telefone:", cliente.telefone);
-    const novoValor = prompt("Novo valor da conta:", cliente.valor);
-    if (novoNome && novoEmail && novoTelefone && novoValor) {
-      clientes[index] = {
-        ...cliente,
-        nome: novoNome,
-        email: novoEmail,
-        telefone: novoTelefone,
-        valor: novoValor
-      };
-      salvarClientes();
-      atualizarLista();
+      clientes.forEach((c, i) => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <strong>${c.nome}</strong><br>
+          Email: ${c.email}<br>
+          Telefone: ${c.telefone}<br>
+          Valor da Conta: R$ ${c.valorConta}<br>
+          Anexo: <a class="download-link" href="${c.arquivo.conteudo}" download="${c.arquivo.nome}">${c.arquivo.nome}</a>
+        `;
+        ul.appendChild(li);
+      });
     }
   }
 </script>
