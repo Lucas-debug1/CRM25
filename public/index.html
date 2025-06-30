@@ -53,7 +53,7 @@
       display: block;
     }
 
-    input {
+    input, select {
       width: 100%;
       padding: 10px;
       margin: 8px 0;
@@ -78,7 +78,7 @@
     }
 
     #app {
-      display: none; /* Oculta até o login */
+      display: none;
     }
 
     .app-container {
@@ -199,6 +199,8 @@
       <input id="nome" placeholder="Nome" />
       <input id="email" placeholder="Email" />
       <input id="telefone" placeholder="Telefone" />
+      <input id="valor" placeholder="Valor da Conta" />
+      <input id="anexo" type="file" accept=".png,.jpeg,.jpg,.pdf" />
       <button onclick="addClient()">Adicionar</button>
     </div>
 
@@ -246,16 +248,21 @@
     const nome = document.getElementById("nome").value;
     const email = document.getElementById("email").value;
     const telefone = document.getElementById("telefone").value;
-    if (nome && email && telefone) {
-      const cliente = { nome, email, telefone };
+    const valor = document.getElementById("valor").value;
+    const anexo = document.getElementById("anexo").files[0];
+
+    if (nome && email && telefone && valor) {
+      const cliente = { nome, email, telefone, valor, anexo: anexo ? anexo.name : "" };
       clientes.push(cliente);
       salvarClientes();
       atualizarLista();
       document.getElementById("nome").value = "";
       document.getElementById("email").value = "";
       document.getElementById("telefone").value = "";
+      document.getElementById("valor").value = "";
+      document.getElementById("anexo").value = "";
     } else {
-      alert("Preencha todos os campos!");
+      alert("Preencha todos os campos obrigatórios!");
     }
   }
 
@@ -280,6 +287,8 @@
         <strong>${cliente.nome}</strong><br/>
         Email: ${cliente.email}<br/>
         Telefone: ${cliente.telefone}<br/>
+        Valor da Conta: ${cliente.valor}<br/>
+        Anexo: ${cliente.anexo || 'Nenhum'}<br/>
         <button onclick="editarCliente(${index})">Editar</button>
         <button onclick="excluirCliente(${index})">Excluir</button>
       `;
@@ -300,11 +309,14 @@
     const novoNome = prompt("Novo nome:", cliente.nome);
     const novoEmail = prompt("Novo email:", cliente.email);
     const novoTelefone = prompt("Novo telefone:", cliente.telefone);
-    if (novoNome && novoEmail && novoTelefone) {
+    const novoValor = prompt("Novo valor da conta:", cliente.valor);
+    if (novoNome && novoEmail && novoTelefone && novoValor) {
       clientes[index] = {
+        ...cliente,
         nome: novoNome,
         email: novoEmail,
-        telefone: novoTelefone
+        telefone: novoTelefone,
+        valor: novoValor
       };
       salvarClientes();
       atualizarLista();
