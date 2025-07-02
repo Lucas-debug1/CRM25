@@ -3,7 +3,7 @@ const router = express.Router();
 const Client = require('../models/Client');
 const nodemailer = require('nodemailer');
 
-// Rota para salvar cliente e enviar email
+
 router.post('/', async (req, res) => {
   const { nome, email, telefone, valorConta, arquivo } = req.body;
 
@@ -12,22 +12,22 @@ router.post('/', async (req, res) => {
   }
 
   try {
-    // Salva no banco
+    
     const cliente = await Client.create({ nome, email, telefone, valorConta, arquivo });
 
-    // Configura o transporte de email via Gmail
+    
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.EMAIL_USER, // Seu Gmail
-        pass: process.env.EMAIL_PASS  // Senha de app
+        user: process.env.EMAIL_USER, 
+        pass: process.env.EMAIL_PASS  
       }
     });
 
-    // Conteúdo do email
+    
     const mailOptions = {
       from: `"CRM 2004" <${process.env.EMAIL_USER}>`,
-      to: process.env.EMAIL_RECEIVER, // Para onde enviar
+      to: process.env.EMAIL_RECEIVER, 
       subject: 'Novo Cliente Cadastrado',
       html: `
         <h2>Novo Cliente Cadastrado</h2>
@@ -39,7 +39,7 @@ router.post('/', async (req, res) => {
       `
     };
 
-    // Envia o email
+    
     await transporter.sendMail(mailOptions);
 
     res.json({ message: 'Cliente salvo e email enviado com sucesso.' });
@@ -51,3 +51,4 @@ router.post('/', async (req, res) => {
 });
 
 module.exports = router;
+console.log("Recebido:", req.body);

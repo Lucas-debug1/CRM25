@@ -109,84 +109,47 @@
 </div>
 
 <script>
-  let clientes = [];
-
-  function enviarFormulario() {
+  async function enviarFormulario() {
     const nome = document.getElementById("nome").value;
     const email = document.getElementById("email").value;
     const telefone = document.getElementById("telefone").value;
     const valorConta = document.getElementById("valorConta").value;
-    const arquivoInput = document.getElementById("arquivo");
-    const arquivo = arquivoInput.files[0];
+    const arquivo = document.getElementById("arquivo").files[0];
 
     if (!nome || !email || !telefone || !valorConta || !arquivo) {
       alert("Preencha todos os campos!");
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const cliente = {
-        nome,
-        email,
-        telefone,
-        valorConta,
-        arquivo: {
-          nome: arquivo.name,
-          tipo: arquivo.type,
-          conteudo: e.target.result
-        }
-      };
+    const formData = new FormData();
+    formData.append("nome", nome);
+    formData.append("email", email);
+    formData.append("telefone", telefone);
+    formData.append("valorConta", valorConta);
+    formData.append("arquivo", arquivo);
 
-      clientes.push(cliente);
-      localStorage.setItem("clientes", JSON.stringify(clientes));
-      alert("Informações enviadas com sucesso!");
-
-      // Limpa o formulário
-      document.getElementById("nome").value = "";
-      document.getElementById("email").value = "";
-      document.getElementById("telefone").value = "";
-      document.getElementById("valorConta").value = "";
-      document.getElementById("arquivo").value = "";
-    };
-
-    reader.readAsDataURL(arquivo);
-  }
-
-  function loginAdmin() {
-    const user = document.getElementById("adminUser").value;
-    const pass = document.getElementById("adminPass").value;
-
-    // Simples autenticação local (pode ser trocado por backend)
-    if (user === "admin" && pass === "1234") {
-      document.getElementById("adminPanel").classList.remove("hidden");
-      carregarClientes();
-    } else {
-      alert("Usuário ou senha incorretos.");
-    }
-  }
-
-  function carregarClientes() {
-    const dados = localStorage.getItem("clientes");
-    const ul = document.getElementById("listaClientes");
-    ul.innerHTML = "";
-
-    if (dados) {
-      clientes = JSON.parse(dados);
-      clientes.forEach((c, i) => {
-        const li = document.createElement("li");
-        li.innerHTML = `
-          <strong>${c.nome}</strong><br>
-          Email: ${c.email}<br>
-          Telefone: ${c.telefone}<br>
-          Valor da Conta: R$ ${c.valorConta}<br>
-          Anexo: <a class="download-link" href="${c.arquivo.conteudo}" download="${c.arquivo.nome}">${c.arquivo.nome}</a>
-        `;
-        ul.appendChild(li);
+    try {
+      const res = await fetch("http://localhost:3000/api/clients", {
+        method: "POST",
+        body: formData
       });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert("Informações enviadas com sucesso!");
+        // Limpa o formulário
+        document.getElementById("nome").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("telefone").value = "";
+        document.getElementById("valorConta").value = "";
+        document.getElementById("arquivo").value = "";
+      } else {
+        alert("Erro ao enviar: " + data.message);
+      }
+    } catch (error) {
+      alert("Erro na requisição: " + error.message);
     }
   }
 </script>
-
 </body>
 </html>
