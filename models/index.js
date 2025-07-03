@@ -1,8 +1,10 @@
 
 const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: 'crm.db'
+
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: 'postgres',
+  protocol: 'postgres',
+  logging: false, 
 });
 
 const User = sequelize.define('User', {
@@ -20,4 +22,5 @@ User.hasMany(Client);
 Client.belongsTo(User);
 
 module.exports = { sequelize, User, Client };
+
         
