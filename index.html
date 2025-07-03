@@ -79,11 +79,28 @@
       color: #007bff;
       text-decoration: underline;
     }
+
+    .whatsapp-button {
+      background-color: #25D366;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+    }
+
+    .whatsapp-button:hover {
+      background-color: #1ebe5d;
+    }
   </style>
 </head>
 <body>
 
-
+<!-- FORMULÁRIO DO CLIENTE -->
 <div class="container">
   <h2>Formulário do Cliente</h2>
   <input id="nome" placeholder="Nome" />
@@ -92,9 +109,14 @@
   <input id="valorConta" placeholder="Valor da Conta (R$)" />
   <input type="file" id="arquivo" accept=".png, .jpeg, .jpg, .pdf" />
   <button onclick="enviarFormulario()">Enviar</button>
+
+  <!-- BOTÃO DO WHATSAPP -->
+  <a href="https://wa.me/558140429370?text=Olá Fernanda,%20Tenho%20de%20interesse%20em%20orçamento%20" target="_blank" class="whatsapp-button">
+    💬 Falar no WhatsApp
+  </a>
 </div>
 
-
+<!-- LOGIN ADMIN -->
 <div class="admin-login container">
   <h2>Login do Administrador</h2>
   <input id="adminUser" placeholder="Usuário" />
@@ -102,7 +124,7 @@
   <button onclick="loginAdmin()">Entrar</button>
 </div>
 
-
+<!-- PAINEL ADMIN -->
 <div class="admin-panel hidden" id="adminPanel">
   <h2>Clientes Cadastrados</h2>
   <ul id="listaClientes"></ul>
@@ -110,47 +132,95 @@
 
 <script>
   async function enviarFormulario() {
-  const nome = document.getElementById("nome").value;
-  const email = document.getElementById("email").value;
-  const telefone = document.getElementById("telefone").value;
-  const valorConta = document.getElementById("valorConta").value;
-  const arquivoInput = document.getElementById("arquivo");
-  const arquivo = arquivoInput.files[0];
+    const nome = document.getElementById("nome").value;
+    const email = document.getElementById("email").value;
+    const telefone = document.getElementById("telefone").value;
+    const valorConta = document.getElementById("valorConta").value;
+    const arquivoInput = document.getElementById("arquivo");
+    const arquivo = arquivoInput.files[0];
 
-  if (!nome || !email || !telefone || !valorConta || !arquivo) {
-    alert("Preencha todos os campos!");
-    return;
+    if (!nome || !email || !telefone || !valorConta || !arquivo) {
+      alert("Preencha todos os campos!");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+      const dados = {
+        nome,
+        email,
+        telefone,
+        valorConta,
+        arquivoNome: arquivo.name,
+        arquivoBase64: e.target.result
+      };
+
+      try {
+        const res = await fetch("https://crm25.onrender.com/api/clients", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(dados)
+        });
+
+        if (res.ok) {
+          alert("Dados enviados com sucesso!");
+        } else {
+          alert("Erro ao enviar os dados.");
+        }
+      } catch (err) {
+        alert("Erro: " + err.message);
+      }
+    };
+    reader.readAsDataURL(arquivo);
   }
 
-  const reader = new FileReader();
-  reader.onload = async function(e) {
-    const dados = {
-      nome,
-      email,
-      telefone,
-      valorConta,
-      arquivoNome: arquivo.name,
-      arquivoBase64: e.target.result
-    };
+  async function loginAdmin() {
+    const user = document.getElementById("adminUser").value;
+    const pass = document.getElementById("adminPass").value;
 
     try {
-      const res = await fetch("https://crm25.onrender.com/api/clients", {
+      const res = await fetch("https://crm25.onrender.com/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dados)
+        body: JSON.stringify({ username: user, password: pass })
       });
 
-      if (res.ok) {
-        alert("Dados enviados com sucesso!");
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        document.getElementById("adminPanel").classList.remove("hidden");
+        carregarClientes();
       } else {
-        alert("Erro ao enviar os dados.");
+        alert(data.error || "Login inválido.");
       }
     } catch (err) {
-      alert("Erro: " + err.message);
+      alert("Erro ao conectar ao servidor.");
     }
-  };
-  reader.readAsDataURL(arquivo);
-}
+  }
+
+  async function carregarClientes() {
+    try {
+      const res = await fetch("https://crm25.onrender.com/api/clients");
+      const clientes = await res.json();
+
+      const ul = document.getElementById("listaClientes");
+      ul.innerHTML = "";
+
+      clientes.forEach(c => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <strong>${c.nome}</strong><br>
+          Email: ${c.email}<br>
+          Telefone: ${c.telefone}<br>
+          Valor da Conta: R$ ${c.valorConta}<br>
+          Anexo: <a class="download-link" href="${c.arquivoBase64}" download="${c.arquivoNome}">${c.arquivoNome}</a>
+        `;
+        ul.appendChild(li);
+      });
+    } catch (err) {
+      alert("Erro ao carregar clientes.");
+    }
+  }
 </script>
 </body>
 </html>
