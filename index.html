@@ -83,7 +83,7 @@
 </head>
 <body>
 
-<!-- FORMULÁRIO DO CLIENTE (sem login) -->
+
 <div class="container">
   <h2>Formulário do Cliente</h2>
   <input id="nome" placeholder="Nome" />
@@ -94,7 +94,7 @@
   <button onclick="enviarFormulario()">Enviar</button>
 </div>
 
-<!-- LOGIN PARA ADMINISTRADOR -->
+
 <div class="admin-login container">
   <h2>Login do Administrador</h2>
   <input id="adminUser" placeholder="Usuário" />
@@ -102,7 +102,7 @@
   <button onclick="loginAdmin()">Entrar</button>
 </div>
 
-<!-- ÁREA PRIVADA PARA VER CLIENTES -->
+
 <div class="admin-panel hidden" id="adminPanel">
   <h2>Clientes Cadastrados</h2>
   <ul id="listaClientes"></ul>
@@ -110,46 +110,47 @@
 
 <script>
   async function enviarFormulario() {
-    const nome = document.getElementById("nome").value;
-    const email = document.getElementById("email").value;
-    const telefone = document.getElementById("telefone").value;
-    const valorConta = document.getElementById("valorConta").value;
-    const arquivo = document.getElementById("arquivo").files[0];
+  const nome = document.getElementById("nome").value;
+  const email = document.getElementById("email").value;
+  const telefone = document.getElementById("telefone").value;
+  const valorConta = document.getElementById("valorConta").value;
+  const arquivoInput = document.getElementById("arquivo");
+  const arquivo = arquivoInput.files[0];
 
-    if (!nome || !email || !telefone || !valorConta || !arquivo) {
-      alert("Preencha todos os campos!");
-      return;
-    }
+  if (!nome || !email || !telefone || !valorConta || !arquivo) {
+    alert("Preencha todos os campos!");
+    return;
+  }
 
-    const formData = new FormData();
-    formData.append("nome", nome);
-    formData.append("email", email);
-    formData.append("telefone", telefone);
-    formData.append("valorConta", valorConta);
-    formData.append("arquivo", arquivo);
+  const reader = new FileReader();
+  reader.onload = async function(e) {
+    const dados = {
+      nome,
+      email,
+      telefone,
+      valorConta,
+      arquivoNome: arquivo.name,
+      arquivoBase64: e.target.result
+    };
 
     try {
-      const res = await fetch("http://localhost:3000/api/clients", {
+      const res = await fetch("https://crm25.onrender.com/api/clients", {
         method: "POST",
-        body: formData
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dados)
       });
 
-      const data = await res.json();
       if (res.ok) {
-        alert("Informações enviadas com sucesso!");
-        // Limpa o formulário
-        document.getElementById("nome").value = "";
-        document.getElementById("email").value = "";
-        document.getElementById("telefone").value = "";
-        document.getElementById("valorConta").value = "";
-        document.getElementById("arquivo").value = "";
+        alert("Dados enviados com sucesso!");
       } else {
-        alert("Erro ao enviar: " + data.message);
+        alert("Erro ao enviar os dados.");
       }
-    } catch (error) {
-      alert("Erro na requisição: " + error.message);
+    } catch (err) {
+      alert("Erro: " + err.message);
     }
-  }
+  };
+  reader.readAsDataURL(arquivo);
+}
 </script>
 </body>
 </html>

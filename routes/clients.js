@@ -1,54 +1,23 @@
 const express = require('express');
 const router = express.Router();
-const Client = require('../models/Client');
-const nodemailer = require('nodemailer');
-
+const { Client } = require('../models');
 
 router.post('/', async (req, res) => {
-  const { nome, email, telefone, valorConta, arquivo } = req.body;
-
-  if (!nome || !email || !telefone || !valorConta || !arquivo) {
-    return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
-  }
-
   try {
-    
-    const cliente = await Client.create({ nome, email, telefone, valorConta, arquivo });
+    const cliente = await Client.create(req.body);
+    res.status(201).json(cliente);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
-    
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER, 
-        pass: process.env.EMAIL_PASS  
-      }
-    });
-
-    
-    const mailOptions = {
-      from: `"CRM 2004" <${process.env.EMAIL_USER}>`,
-      to: process.env.EMAIL_RECEIVER, 
-      subject: 'Novo Cliente Cadastrado',
-      html: `
-        <h2>Novo Cliente Cadastrado</h2>
-        <p><strong>Nome:</strong> ${nome}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Telefone:</strong> ${telefone}</p>
-        <p><strong>Valor da Conta:</strong> R$ ${valorConta}</p>
-        <p><strong>Anexo:</strong> ${arquivo.nome}</p>
-      `
-    };
-
-    
-    await transporter.sendMail(mailOptions);
-
-    res.json({ message: 'Cliente salvo e email enviado com sucesso.' });
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Erro ao salvar cliente ou enviar email.' });
+router.get('/', async (req, res) => {
+  try {
+    const clientes = await Client.findAll({ order: [['createdAt', 'DESC']] });
+    res.json(clientes);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
 module.exports = router;
-console.log("Recebido:", req.body);
