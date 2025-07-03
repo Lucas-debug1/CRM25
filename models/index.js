@@ -1,10 +1,10 @@
 
 const { Sequelize, DataTypes } = require('sequelize');
+require('dotenv').config();
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
+  host: process.env.DB_HOST,
   dialect: 'postgres',
-  protocol: 'postgres',
-  logging: false, 
 });
 
 const User = sequelize.define('User', {
@@ -15,7 +15,10 @@ const User = sequelize.define('User', {
 const Client = sequelize.define('Client', {
   nome: DataTypes.STRING,
   email: DataTypes.STRING,
-  telefone: DataTypes.STRING
+  telefone: DataTypes.STRING,
+  valorConta: DataTypes.STRING,
+  arquivoNome: DataTypes.STRING,
+  arquivoBase64: DataTypes.TEXT
 });
 
 User.hasMany(Client);

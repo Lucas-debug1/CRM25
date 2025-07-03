@@ -16,3 +16,16 @@ sequelize.sync().then(() => console.log("DB conectado e sincronizado."));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+const { sequelize, User } = require('./models');
+
+// Após sync
+sequelize.sync().then(async () => {
+  console.log("DB sincronizado.");
+
+  // Cria admin se não existir
+  const admin = await User.findOne({ where: { username: 'admin' } });
+  if (!admin) {
+    await User.create({ username: 'admin', password: '1234' });
+    console.log("Usuário admin criado.");
+  }
+});
